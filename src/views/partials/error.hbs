@@ -1,0 +1,12 @@
+{{#if errors}}
+  <div class="section pt-0">
+    <div class="notification is-danger is-light content">
+      <p class="has-text-weight-semibold">There was a problem...</p>
+      <ul>
+        {{#each errors}}
+          <li>{{message}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+{{/if}}
