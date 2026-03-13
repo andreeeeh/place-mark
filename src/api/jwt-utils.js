@@ -28,8 +28,8 @@ export function decodeToken(token) {
   return userInfo;
 }
 
-export async function validate(request, session) {
-  const user = await db.userStore.getUserById(session.id);
+export async function validate(decoded, request) {
+  const user = await db.userStore.getUserById(decoded.id);
   if (!user) {
     return { isValid: false };
   }

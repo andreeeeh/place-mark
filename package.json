@@ -1,5 +1,5 @@
 {
-  "name": "placemark",
+  "name": "place-mark",
   "version": "1.0.0",
   "description": "A place-marking application for the HDip in Computing, WIT",
   "main": "index.js",
@@ -32,6 +32,7 @@
     "jsonwebtoken": "^9.0.2",
     "lowdb": "^7.0.1",
     "mongoose": "^8.19.2",
+    "mocha": "^11.7.4",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
