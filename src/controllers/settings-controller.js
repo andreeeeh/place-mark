@@ -1,0 +1,38 @@
+import { db } from "../models/db.js";
+
+export const settingsController = {
+  index: {
+    handler: async function (request, h) {
+      if (!request.auth.credentials?.isAdmin) {
+        return h.redirect("/dashboard");
+      }
+      const users = await db.userStore.getAllUsers();
+      return h.view("settings-view", {
+        title: "Settings",
+        isAdmin: !!request.auth.credentials.isAdmin,
+        users,
+      });
+    },
+  },
+
+  deleteUser: {
+    handler: async function (request, h) {
+      if (!request.auth.credentials?.isAdmin) {
+        return h.redirect("/dashboard");
+      }
+      await db.userStore.deleteUserById(request.params.id);
+      return h.redirect("/settings");
+    },
+  },
+
+  toggleAdmin: {
+    handler: async function (request, h) {
+      if (!request.auth.credentials?.isAdmin) {
+        return h.redirect("/dashboard");
+      }
+      await db.userStore.updateUser({ _id: request.params.id });
+
+      return h.redirect("/settings");
+    },
+  },
+};
