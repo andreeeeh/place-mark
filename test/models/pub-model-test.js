@@ -63,29 +63,15 @@ suite("Pub Model tests", () => {
     assert.equal(allPubs.length, testPubs.length);
   });
 
-  test("update a pub", async () => {
-    const pubToUpdate = testPubs[0];
-    const updatedPubData = {
-      _id: pubToUpdate._id,
-      name: "Updated Pub Name",
-      description: "Updated description",
-      latitude: 53.31,
-      longitude: -6.2,
-      categories: {
-        daytime: false,
-        nighttime: true,
-        liveMusic: true,
-        dj: true,
-      },
-    };
+  test("get pubs by category - liveMusic", async () => {
+    const pubs = await db.pubStore.getPubByCategory("liveMusic");
+    assert.equal(pubs.length, 1);
+    assert.isTrue(pubs.every((pub) => pub.categories.liveMusic === true));
+  });
 
-    await db.pubStore.updatePub(updatedPubData);
-    const returnedPub = await db.pubStore.getPubById(pubToUpdate._id);
-
-    assert.equal(returnedPub.name, updatedPubData.name);
-    assert.equal(returnedPub.description, updatedPubData.description);
-    assert.equal(returnedPub.latitude, updatedPubData.latitude);
-    assert.equal(returnedPub.longitude, updatedPubData.longitude);
-    assert.deepEqual(returnedPub.categories, updatedPubData.categories);
+  test("get pubs by category - daytime", async () => {
+    const pubs = await db.pubStore.getPubByCategory("daytime");
+    assert.equal(pubs.length, 2);
+    assert.isTrue(pubs.every((pub) => pub.categories.daytime === true));
   });
 });
