@@ -7,10 +7,16 @@ export const settingsController = {
         return h.redirect("/dashboard");
       }
       const users = await db.userStore.getAllUsers();
+      const pubs = await db.pubStore.getAllPubs();
+      const usersWithPubCount = users.map((user) => ({
+        ...user,
+        pubCount: pubs.filter((pub) => String(pub.userId) === String(user._id)).length,
+      }));
       return h.view("settings-view", {
         title: "Settings",
         isAdmin: !!request.auth.credentials.isAdmin,
-        users,
+        users: usersWithPubCount,
+        totalUsers: users.length,
       });
     },
   },
