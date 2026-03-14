@@ -5,8 +5,8 @@
     <div class="column is-5">
       <div class="card has-background-grey-lighter">
         <div class="card-content">
-          <h2 class="title is-4">Add a new pub</h2>
-          <p class="subtitle is-6">Add your favorite place with location, categories and a starting rating.</p>
+          <h2 class="title is-4">{{#if pubId}}Edit {{form.name}}{{else}}Add a new pub{{/if}}</h2>
+          <p class="subtitle is-6">Add the details of your favorite pub</p>
           {{> error }}
           {{> pubs-form }}
         </div>

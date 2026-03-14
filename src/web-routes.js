@@ -15,4 +15,7 @@ export const webRoutes = [
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
   { method: "POST", path: "/pub", config: dashboardController.create },
+  { method: "GET", path: "/pub/{id}/edit", config: dashboardController.edit },
+  { method: "POST", path: "/pub/{id}/update", config: dashboardController.update },
+  { method: "GET", path: "/pub/{id}/delete", config: dashboardController.delete },
 ];

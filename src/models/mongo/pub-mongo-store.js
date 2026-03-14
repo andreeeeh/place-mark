@@ -31,6 +31,16 @@ export const pubMongoStore = {
     }
   },
 
+  async updatePub(updatedPub) {
+    const pub = await Pub.findOne({ _id: updatedPub._id });
+    pub.name = updatedPub.name;
+    pub.description = updatedPub.description;
+    pub.latitude = updatedPub.latitude;
+    pub.longitude = updatedPub.longitude;
+    pub.categories = updatedPub.categories;
+    await pub.save();
+  },
+
   async deleteAll() {
     await Pub.deleteMany({});
   },
