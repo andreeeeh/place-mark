@@ -1,0 +1,46 @@
+{{> welcome-menu active="signup"}}
+<main class="section">
+  <div class="columns is-centered">
+    <div class="column is-7">
+      <div class="card has-background-grey-lighter">
+        <div class="card-content">
+          <h2 class="title has-text-centered">Sign up</h2>
+          <p class="subtitle has-text-centered">Create an account and start sharing your favorite Dublin pubs.</p>
+
+          <form method="POST" action="/signup">
+            <div class="columns">
+              <div class="column field">
+                <label class="label" for="firstName">First Name</label>
+                <input class="input" type="text" id="firstName" name="firstName" value="{{firstName}}" required />
+              </div>
+
+              <div class="column field">
+                <label class="label" for="lastName">Last Name</label>
+                <input class="input" type="text" id="lastName" name="lastName" value="{{lastName}}" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="email">Email</label>
+              <input class="input" type="email" id="email" name="email" value="{{email}}" required />
+            </div>
+
+            <div class="field">
+              <label class="label" for="password">Password</label>
+              <input class="input" type="password" id="password" name="password" required />
+            </div>
+
+            <div class="field is-grouped mt-5">
+              <button type="submit" class="button is-success is-fullwidth">Sign up</button>
+            </div>
+          </form>
+
+          <p class="has-text-centered mt-4">
+            Already have an account?
+            <a class="has-text-success has-text-weight-semibold" href="/login">Log in here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
