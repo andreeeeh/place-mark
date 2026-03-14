@@ -1,5 +1,5 @@
 {{#each pubs}}
-  <article class="message is-success is-light">
+  <article id="pub-{{_id}}" class="message is-success is-light">
     <div class="message-header">
       <p>{{name}}</p>
     </div>
@@ -13,6 +13,20 @@
         {{#if categories.liveMusic}} Live Music {{/if}}
         {{#if categories.dj}} DJ {{/if}}
       </p>
+      <div class="buttons mt-3">
+        <a href="/pub/{{_id}}/edit" class="button is-small is-link is-light">Edit</a>
+        <a href="/pub/{{_id}}/delete" class="button is-small is-danger is-light">Delete</a>
+      </div>
     </div>
   </article>
 {{/each}}
+
+{{! prettier-ignore }}
+<script>
+  const activePubId = "{{pubId}}";
+  if (activePubId) {
+    const el = document.getElementById(`pub-${activePubId}`);
+    el.classList.remove("is-success");
+    el.classList.add("is-warning");
+  }
+</script>
