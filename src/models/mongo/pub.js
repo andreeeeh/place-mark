@@ -16,6 +16,7 @@ const pubSchema = new mongoose.Schema({
     liveMusic: { type: Boolean, default: false },
     dj: { type: Boolean, default: false },
   },
+  isAuthor: { type: Boolean, default: false },
 });
 
 export const Pub = mongoose.model("Pub", pubSchema);

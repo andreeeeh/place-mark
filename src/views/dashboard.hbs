@@ -16,8 +16,15 @@
     <div class="column is-7">
       <div class="card has-background-grey-lighter">
         <div class="card-content">
-          <h2 class="title is-4">Your pubs</h2>
-          <p class="subtitle is-6">All pubs you have added so far.</p>
+          <h2 class="title is-4">Pubs</h2>
+
+          <div class="buttons mb-4">
+            <a href="/dashboard" id="all" class="button is-small is-light">All</a>
+            <a href="/dashboard/pub/daytime" id="daytime" class="button is-small is-light">Daytime</a>
+            <a href="/dashboard/pub/nighttime" id="nighttime" class="button is-small is-light">Nighttime</a>
+            <a href="/dashboard/pub/liveMusic" id="liveMusic" class="button is-small is-light">Live Music</a>
+            <a href="/dashboard/pub/dj" id="dj" class="button is-small is-light">DJ</a>
+          </div>
 
           {{#if pubs.length}}
             {{> pubs-list}}
@@ -29,3 +36,16 @@
     </div>
   </div>
 </section>
+
+<script>
+  const activeCategory = "{{category}}";
+  if (activeCategory) {
+    const el = document.getElementById(activeCategory);
+    el.classList.remove("is-light");
+    el.classList.add("is-success");
+  } else {
+    const el = document.getElementById("all");
+    el.classList.remove("is-light");
+    el.classList.add("is-success");
+  }
+</script>
