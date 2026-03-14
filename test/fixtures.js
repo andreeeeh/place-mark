@@ -13,6 +13,18 @@ export const userCredentials = {
 };
 export const testUsers = [
   {
+    firstName: "Homer",
+    lastName: "Simpson",
+    email: "homer@simpson.com",
+    password: "secret",
+  },
+  {
+    firstName: "Marge",
+    lastName: "Simpson",
+    email: "marge@simpson.com",
+    password: "secret",
+  },
+  {
     firstName: "Bart",
     lastName: "Simpson",
     email: "bart@simpson.com",
@@ -20,39 +32,69 @@ export const testUsers = [
   },
 ];
 
+// source: https://www.visitdublin.com/
 export const testNewPub = {
-  name: "The Cobblestone",
-  description: "Traditional pub with live music sessions.",
-  latitude: 53.3498,
-  longitude: -6.2789,
+  name: "Mulligan's",
+  description: "It has been at the core of the city's cultural and imbibing life for nearly 300 years.",
+  latitude: 53.34699497584233,
+  longitude: -6.255104528837972,
   categories: {
     daytime: true,
     nighttime: true,
-    liveMusic: true,
+    liveMusic: false,
     dj: false,
   },
 };
 
+// source: https://www.visitdublin.com/
 export const testPubList = [
   {
     name: "The Brazen Head",
-    description: "Historic pub in Dublin city.",
-    latitude: 53.3438,
-    longitude: -6.2867,
+    description: "Dating back to 1198, The Brazen Head is one of Ireland's oldest pubs",
+    latitude: 53.34510638975115,
+    longitude: -6.275298041026639,
     categories: { daytime: true, nighttime: true, liveMusic: false, dj: false },
   },
   {
-    name: "Whelan's",
-    description: "Live venue with a lively atmosphere.",
-    latitude: 53.3338,
-    longitude: -6.2651,
-    categories: { daytime: false, nighttime: true, liveMusic: true, dj: true },
+    name: "The Temple Bar",
+    description: "A genuinely warm welcome backed up by first rate modern service and traditional Irish music, is the hallmark of this friendly spot in Dublin City centre.",
+    latitude: 53.892853508136454,
+    longitude: -3.6274771291586947,
+    categories: { daytime: true, nighttime: true, liveMusic: true, dj: true },
+  },
+];
+
+// Flat-format fixtures for API tests
+export const testNewPubPayload = {
+  name: "Mulligan's",
+  description: "It has been at the core of the city's cultural and imbibing life for nearly 300 years.",
+  latitude: 53.34699497584233,
+  longitude: -6.255104528837972,
+  daytime: true,
+  nighttime: true,
+  liveMusic: false,
+  dj: false,
+};
+
+export const testPubPayloads = [
+  {
+    name: "The Brazen Head",
+    description: "Dating back to 1198, The Brazen Head is one of Ireland's oldest pubs",
+    latitude: 53.34510638975115,
+    longitude: -6.275298041026639,
+    daytime: true,
+    nighttime: true,
+    liveMusic: false,
+    dj: false,
   },
   {
-    name: "The Stag's Head",
-    description: "Classic Victorian-style pub.",
-    latitude: 53.3442,
-    longitude: -6.2645,
-    categories: { daytime: true, nighttime: true, liveMusic: false, dj: false },
+    name: "The Temple Bar",
+    description: "A genuinely warm welcome. Traditional Irish music in Dublin City centre.",
+    latitude: 53.892853508136454,
+    longitude: -3.6274771291586947,
+    daytime: true,
+    nighttime: true,
+    liveMusic: true,
+    dj: true,
   },
 ];

@@ -20,8 +20,16 @@ export const dashboardController = {
   index: {
     handler: async function (request, h) {
       const userId = request.auth.credentials._id;
-      const pubs = await db.pubStore.getUserPubs(userId);
-      return h.view("dashboard", { pubs });
+      const isAdmin = !!request.auth.credentials.isAdmin;
+
+      const category = request.query.category !== "all" ? request.query.category : null;
+      const pubs = category ? await db.pubStore.getPubByCategory(category) : await db.pubStore.getAllPubs();
+
+      pubs.forEach((pub) => {
+        pub.isAuthor = String(pub.userId) === String(userId);
+      });
+
+      return h.view("dashboard", { pubs, isAdmin, category });
     },
   },
 
@@ -31,9 +39,13 @@ export const dashboardController = {
       options: { abortEarly: false },
       failAction: async function (request, h, error) {
         const userId = request.auth.credentials._id;
-        const pubs = await db.pubStore.getUserPubs(userId);
+        const isAdmin = !!request.auth.credentials.isAdmin;
+        const pubs = await db.pubStore.getAllPubs();
+        pubs.forEach((pub) => {
+          pub.isAuthor = String(pub.userId) === String(userId);
+        });
         const form = mapPubPayload(request.payload);
-        return h.view("dashboard", { pubs, form, errors: error.details }).takeover().code(400);
+        return h.view("dashboard", { pubs, form, errors: error.details, isAdmin }).takeover().code(400);
       },
     },
     handler: async function (request, h) {
@@ -47,7 +59,11 @@ export const dashboardController = {
   edit: {
     handler: async function (request, h) {
       const userId = request.auth.credentials._id;
-      const pubs = await db.pubStore.getUserPubs(userId);
+      const isAdmin = !!request.auth.credentials.isAdmin;
+      const pubs = await db.pubStore.getAllPubs();
+      pubs.forEach((pub) => {
+        pub.isAuthor = String(pub.userId) === String(userId);
+      });
       const pub = await db.pubStore.getPubById(request.params.id);
 
       if (!pub || String(pub.userId) !== String(userId)) {
@@ -58,6 +74,7 @@ export const dashboardController = {
         pubs,
         pubId: pub._id,
         form: pub,
+        isAdmin,
       });
     },
   },
@@ -68,13 +85,18 @@ export const dashboardController = {
       options: { abortEarly: false },
       failAction: async function (request, h, error) {
         const userId = request.auth.credentials._id;
-        const pubs = await db.pubStore.getUserPubs(userId);
+        const isAdmin = !!request.auth.credentials.isAdmin;
+        const pubs = await db.pubStore.getAllPubs();
+        pubs.forEach((pub) => {
+          pub.isAuthor = String(pub.userId) === String(userId);
+        });
         return h
           .view("dashboard", {
             pubs,
             pubId: request.params.id,
             form: mapPubPayload(request.payload),
             errors: error.details,
+            isAdmin,
           })
           .takeover()
           .code(400);

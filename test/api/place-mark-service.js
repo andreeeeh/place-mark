@@ -1,5 +1,5 @@
 import axios from "axios";
-import { maggie, serviceUrl } from "../fixtures.js";
+import { serviceUrl } from "../fixtures.js";
 
 export const placeMarkService = {
   placeMarkUrl: serviceUrl,
@@ -28,55 +28,46 @@ export const placeMarkService = {
     return res.data;
   },
 
-  // async createPlaylist(playlist) {
-  //   const res = await axios.post(`${this.playtimeUrl}/api/playlists`, playlist);
-  //   return res.data;
-  // },
+  async deleteUser(id) {
+    const res = await axios.delete(`${this.placeMarkUrl}/api/users/${id}`);
+    return res.data;
+  },
 
-  // async deleteAllPlaylists() {
-  //   const response = await axios.delete(`${this.playtimeUrl}/api/playlists`);
-  //   return response.data;
-  // },
+  async toggleAdmin(id) {
+    const res = await axios.post(`${this.placeMarkUrl}/api/users/${id}/admin`);
+    return res.data;
+  },
 
-  // async deletePlaylist(id) {
-  //   const response = await axios.delete(`${this.playtimeUrl}/api/playlists/${id}`);
-  //   return response;
-  // },
+  async createPub(pub) {
+    const res = await axios.post(`${this.placeMarkUrl}/api/pubs`, pub);
+    return res.data;
+  },
 
-  // async getAllPlaylists() {
-  //   const res = await axios.get(`${this.playtimeUrl}/api/playlists`);
-  //   return res.data;
-  // },
+  async getPub(id) {
+    const res = await axios.get(`${this.placeMarkUrl}/api/pubs/${id}`);
+    return res.data;
+  },
 
-  // async getPlaylist(id) {
-  //   const res = await axios.get(`${this.playtimeUrl}/api/playlists/${id}`);
-  //   return res.data;
-  // },
+  async getAllPubs(category) {
+    const url = category ? `${this.placeMarkUrl}/api/pubs?category=${category}` : `${this.placeMarkUrl}/api/pubs`;
+    const res = await axios.get(url);
+    return res.data;
+  },
 
-  // async getAllTracks() {
-  //   const res = await axios.get(`${this.playtimeUrl}/api/tracks`);
-  //   return res.data;
-  // },
+  async deletePub(id) {
+    const res = await axios.delete(`${this.placeMarkUrl}/api/pubs/${id}`);
+    return res;
+  },
 
-  // async createTrack(id, track) {
-  //   const res = await axios.post(`${this.playtimeUrl}/api/playlists/${id}/tracks`, track);
-  //   return res.data;
-  // },
+  async deleteAllPubs() {
+    const res = await axios.delete(`${this.placeMarkUrl}/api/pubs`);
+    return res.data;
+  },
 
-  // async deleteAllTracks() {
-  //   const res = await axios.delete(`${this.playtimeUrl}/api/tracks`);
-  //   return res.data;
-  // },
-
-  // async getTrack(id) {
-  //   const res = await axios.get(`${this.playtimeUrl}/api/tracks/${id}`);
-  //   return res.data;
-  // },
-
-  // async deleteTrack(id) {
-  //   const res = await axios.delete(`${this.playtimeUrl}/api/tracks/${id}`);
-  //   return res.data;
-  // },
+  async updatePub(id, pub) {
+    const res = await axios.post(`${this.placeMarkUrl}/api/pubs/${id}`, pub);
+    return res.data;
+  },
 
   async authenticate(user) {
     const response = await axios.post(`${this.placeMarkUrl}/api/users/authenticate`, user);

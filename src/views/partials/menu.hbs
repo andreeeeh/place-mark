@@ -1,4 +1,4 @@
-<nav class="navbar p-4 has-background-grey-darker" role="navigation" aria-label="main navigation">
+<nav class="navbar p-4 has-background-grey-dark" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     {{> place-mark-brand}}
   </div>
@@ -8,6 +8,9 @@
         <div class="buttons">
           <a id="dashboard" class="button is-success is-light" href="/dashboard">Home</a>
           <a id="about" class="button is-success is-light" href="/about">About</a>
+          {{#if isAdmin}}
+          <a id="settings" class="button is-success is-light" href="/settings">Settings</a>
+          {{/if}}
           <a id="logout" class="button is-light" href="/logout">Logout</a>
         </div>
       </div>

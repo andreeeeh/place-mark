@@ -24,11 +24,11 @@ export const UserArray = Joi.array().items(UserSpecPlus).label("UserArray");
 
 export const PubSpec = Joi.object()
   .keys({
-    name: Joi.string().required(),
-    description: Joi.string().required(),
-    latitude: Joi.number().required(),
-    longitude: Joi.number().required(),
-    daytime: Joi.boolean().truthy("on").falsy("").default(false),
+    name: Joi.string().example("Temple Bar Pub").required(),
+    description: Joi.string().example("Some description.").required(),
+    latitude: Joi.number().example(12).required(),
+    longitude: Joi.number().example(21).required(),
+    daytime: Joi.boolean().example(true).truthy("on").falsy("").default(false),
     nighttime: Joi.boolean().truthy("on").falsy("").default(false),
     liveMusic: Joi.boolean().truthy("on").falsy("").default(false),
     dj: Joi.boolean().truthy("on").falsy("").default(false),
@@ -49,11 +49,14 @@ export const PubSpecPlus = Joi.object()
       liveMusic: Joi.boolean().default(false),
       dj: Joi.boolean().default(false),
     }).required(),
+    isAuthor: Joi.boolean().default(false),
     __v: Joi.number(),
   })
   .label("PubDetailsPlus");
 
 export const PubArray = Joi.array().items(PubSpecPlus).label("PubArray");
+
+export const PubCategorySpec = Joi.string().valid("daytime", "nighttime", "liveMusic", "dj").optional();
 
 export const JwtAuth = Joi.object()
   .keys({

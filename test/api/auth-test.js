@@ -6,7 +6,11 @@ import { testUser, userCredentials } from "../fixtures.js";
 suite("Authentication API tests", async () => {
   setup(async () => {
     placeMarkService.clearAuth();
-    await placeMarkService.createUser(testUser);
+    try {
+      await placeMarkService.createUser(testUser);
+    } catch (e) {
+      // may already exist from a previous run
+    }
     await placeMarkService.authenticate(userCredentials);
     await placeMarkService.deleteAllUsers();
   });

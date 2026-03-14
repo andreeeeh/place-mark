@@ -6,7 +6,7 @@ const result = dotenv.config();
 
 export function createToken(user) {
   const payload = {
-    id: user._id || user.id,
+    id: user._id,
     email: user.email,
   };
   const options = {
