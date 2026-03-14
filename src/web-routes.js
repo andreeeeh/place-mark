@@ -21,5 +21,6 @@ export const webRoutes = [
   { method: "POST", path: "/pub", config: dashboardController.create },
   { method: "GET", path: "/pub/{id}/edit", config: dashboardController.edit },
   { method: "POST", path: "/pub/{id}", config: dashboardController.update },
+  { method: "POST", path: "/pub/{id}/uploadimage", config: dashboardController.uploadImage },
   { method: "GET", path: "/pub/{id}/delete", config: dashboardController.delete },
 ];

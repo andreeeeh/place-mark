@@ -4,21 +4,46 @@
       <p>{{name}}</p>
     </div>
     <div class="message-body">
-      <p class="mb-2">{{description}}</p>
-      <p><strong>Location:</strong> {{latitude}}, {{longitude}}</p>
-      <p>
-        <strong>Categories:</strong>
-        {{#if categories.daytime}} Daytime {{/if}}
-        {{#if categories.nighttime}} Nighttime {{/if}}
-        {{#if categories.liveMusic}} Live Music {{/if}}
-        {{#if categories.dj}} DJ {{/if}}
-      </p>
-      {{#if isAuthor}}
-        <div class="buttons mt-3">
-          <a href="/pub/{{_id}}/edit" class="button is-small is-link is-light">Edit</a>
-          <a href="/pub/{{_id}}/delete" class="button is-small is-danger is-light">Delete</a>
+      <div class="columns is-vcentered is-variable is-4">
+        <div class="column">
+          <p class="mb-2">{{description}}</p>
+          <p><strong>Location:</strong> {{latitude}}, {{longitude}}</p>
+          <p>
+            <strong>Categories:</strong>
+            {{#if categories.daytime}} Daytime {{/if}}
+            {{#if categories.nighttime}} Nighttime {{/if}}
+            {{#if categories.liveMusic}} Live Music {{/if}}
+            {{#if categories.dj}} DJ {{/if}}
+          </p>
+          {{#if isAuthor}}
+            <div class="buttons mt-3">
+              <a href="/pub/{{_id}}/edit" class="button is-small is-link is-light">Edit</a>
+              <a href="/pub/{{_id}}/delete" class="button is-small is-danger is-light">Delete</a>
+            </div>
+
+            <form action="/pub/{{_id}}/uploadimage" method="POST" enctype="multipart/form-data">
+              <div class="file has-name is-small mt-2">
+                <label class="file-label">
+                  <input class="file-input" name="imagefile" type="file" accept="image/png, image/jpeg" />
+                  <span class="file-cta">
+                    <span class="file-icon"><i class="fas fa-upload"></i></span>
+                    <span class="file-label">Choose a file…</span>
+                  </span>
+                  <span class="file-name"></span>
+                </label>
+                <button type="submit" class="button is-small is-info">Upload</button>
+              </div>
+            </form>
+          {{/if}}
         </div>
-      {{/if}}
+        <div class="column is-narrow">
+          {{#if img}}
+            <figure class="image is-128x128">
+              <img src="{{img}}" alt="{{name}}" />
+            </figure>
+          {{/if}}
+        </div>
+      </div>
     </div>
   </article>
 {{/each}}
@@ -31,4 +56,12 @@
     el.classList.remove("is-success");
     el.classList.add("is-warning");
   }
+
+  document.querySelectorAll(".file-input").forEach((input) => {
+    input.onchange = () => {
+      if (input.files.length > 0) {
+        input.closest(".file").querySelector(".file-name").textContent = input.files[0].name;
+      }
+    };
+  });
 </script>
