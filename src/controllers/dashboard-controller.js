@@ -20,7 +20,10 @@ export const dashboardController = {
   index: {
     handler: async function (request, h) {
       const userId = request.auth.credentials._id;
-      const pubs = await db.pubStore.getUserPubs(userId);
+      const pubs = await db.pubStore.getAllPubs();
+      pubs.forEach((pub) => {
+        pub.isAuthor = String(pub.userId) === String(userId);
+      });
       return h.view("dashboard", { pubs });
     },
   },
@@ -31,7 +34,10 @@ export const dashboardController = {
       options: { abortEarly: false },
       failAction: async function (request, h, error) {
         const userId = request.auth.credentials._id;
-        const pubs = await db.pubStore.getUserPubs(userId);
+        const pubs = await db.pubStore.getAllPubs();
+        pubs.forEach((pub) => {
+          pub.isAuthor = String(pub.userId) === String(userId);
+        });
         const form = mapPubPayload(request.payload);
         return h.view("dashboard", { pubs, form, errors: error.details }).takeover().code(400);
       },
@@ -47,7 +53,10 @@ export const dashboardController = {
   edit: {
     handler: async function (request, h) {
       const userId = request.auth.credentials._id;
-      const pubs = await db.pubStore.getUserPubs(userId);
+      const pubs = await db.pubStore.getAllPubs();
+      pubs.forEach((pub) => {
+        pub.isAuthor = String(pub.userId) === String(userId);
+      });
       const pub = await db.pubStore.getPubById(request.params.id);
 
       if (!pub || String(pub.userId) !== String(userId)) {
@@ -68,7 +77,10 @@ export const dashboardController = {
       options: { abortEarly: false },
       failAction: async function (request, h, error) {
         const userId = request.auth.credentials._id;
-        const pubs = await db.pubStore.getUserPubs(userId);
+        const pubs = await db.pubStore.getAllPubs();
+        pubs.forEach((pub) => {
+          pub.isAuthor = String(pub.userId) === String(userId);
+        });
         return h
           .view("dashboard", {
             pubs,
@@ -110,6 +122,17 @@ export const dashboardController = {
         await db.pubStore.deletePubById(request.params.id);
       }
       return h.redirect("/dashboard");
+    },
+  },
+
+  category: {
+    handler: async function (request, h) {
+      const userId = request.auth.credentials._id;
+      const pubs = await db.pubStore.getPubByCategory(request.params.category);
+      pubs.forEach((pub) => {
+        pub.isAuthor = String(pub.userId) === String(userId);
+      });
+      return h.view("dashboard", { pubs, category: request.params.category });
     },
   },
 };

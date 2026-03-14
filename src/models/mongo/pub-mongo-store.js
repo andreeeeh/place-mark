@@ -23,6 +23,11 @@ export const pubMongoStore = {
     return pubs;
   },
 
+  async getPubByCategory(category) {
+    const pubs = await Pub.find({ [`categories.${category}`]: true }).lean();
+    return pubs;
+  },
+
   async deletePubById(id) {
     try {
       await Pub.deleteOne({ _id: id });

@@ -13,10 +13,12 @@
         {{#if categories.liveMusic}} Live Music {{/if}}
         {{#if categories.dj}} DJ {{/if}}
       </p>
-      <div class="buttons mt-3">
-        <a href="/pub/{{_id}}/edit" class="button is-small is-link is-light">Edit</a>
-        <a href="/pub/{{_id}}/delete" class="button is-small is-danger is-light">Delete</a>
-      </div>
+      {{#if isAuthor}}
+        <div class="buttons mt-3">
+          <a href="/pub/{{_id}}/edit" class="button is-small is-link is-light">Edit</a>
+          <a href="/pub/{{_id}}/delete" class="button is-small is-danger is-light">Delete</a>
+        </div>
+      {{/if}}
     </div>
   </article>
 {{/each}}

@@ -49,6 +49,7 @@ export const PubSpecPlus = Joi.object()
       liveMusic: Joi.boolean().default(false),
       dj: Joi.boolean().default(false),
     }).required(),
+    isAuthor: Joi.boolean().default(false),
     __v: Joi.number(),
   })
   .label("PubDetailsPlus");
