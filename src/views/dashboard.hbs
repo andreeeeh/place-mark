@@ -1,0 +1,31 @@
+{{> menu active="dashboard"}}
+
+<section class="section">
+  <div class="columns is-variable is-6">
+    <div class="column is-5">
+      <div class="card has-background-grey-lighter">
+        <div class="card-content">
+          <h2 class="title is-4">{{#if pubId}}Edit {{form.name}}{{else}}Add a new pub{{/if}}</h2>
+          <p class="subtitle is-6">Add the details of your favorite pub</p>
+          {{> error }}
+          {{> pubs-form }}
+        </div>
+      </div>
+    </div>
+
+    <div class="column is-7">
+      <div class="card has-background-grey-lighter">
+        <div class="card-content">
+          <h2 class="title is-4">Your pubs</h2>
+          <p class="subtitle is-6">All pubs you have added so far.</p>
+
+          {{#if pubs.length}}
+            {{> pubs-list}}
+          {{else}}
+            <div class="notification is-warning is-light">No pubs added yet. Use the form on the left to create your first one.</div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

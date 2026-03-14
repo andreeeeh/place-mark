@@ -5,13 +5,13 @@ export const accountsController = {
   index: {
     auth: false,
     handler: function (request, h) {
-      return h.view("main", { title: "Welcome to PlaceMark" });
+      return h.view("main", { title: "Welcome to PlaceMark - Dublin Pubs" });
     },
   },
   showSignup: {
     auth: false,
     handler: function (request, h) {
-      return h.view("signup-view", { title: "Sign up for PlaceMark" });
+      return h.view("signup-view", { title: "Sign up for PlaceMark - Dublin Pubs" });
     },
   },
   signup: {
@@ -26,13 +26,13 @@ export const accountsController = {
     handler: async function (request, h) {
       const user = request.payload;
       await db.userStore.addUser(user);
-      return h.redirect("/");
+      return h.redirect("/login");
     },
   },
   showLogin: {
     auth: false,
     handler: function (request, h) {
-      return h.view("login-view", { title: "Login to PlaceMark" });
+      return h.view("login-view", { title: "Login to PlaceMark - Dublin Pubs" });
     },
   },
   login: {
@@ -48,7 +48,10 @@ export const accountsController = {
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
       if (!user || user.password !== password) {
-        return h.redirect("/");
+        return h
+          .view("login-view", { title: "Log in error", errors: [{ message: "Invalid email or password" }] })
+          .takeover()
+          .code(400);
       }
       request.cookieAuth.set({ id: user._id || user.id });
       return h.redirect("/dashboard");
