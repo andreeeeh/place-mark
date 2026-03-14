@@ -1,4 +1,4 @@
-<form action="{{#if pubId}}/pub/{{pubId}}/update{{else}}/pub{{/if}}" method="POST">
+<form action="{{#if pubId}}/pub/{{pubId}}{{else}}/pub{{/if}}" method="POST">
   <div class="field">
     <label class="label" for="name">Name</label>
     <input class="input" type="text" id="name" name="name" value="{{form.name}}" required />

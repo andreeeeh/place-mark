@@ -21,11 +21,15 @@ export const dashboardController = {
     handler: async function (request, h) {
       const userId = request.auth.credentials._id;
       const isAdmin = !!request.auth.credentials.isAdmin;
-      const pubs = await db.pubStore.getAllPubs();
+
+      const category = request.query.category !== "all" ? request.query.category : null;
+      const pubs = category ? await db.pubStore.getPubByCategory(category) : await db.pubStore.getAllPubs();
+
       pubs.forEach((pub) => {
         pub.isAuthor = String(pub.userId) === String(userId);
       });
-      return h.view("dashboard", { pubs, isAdmin });
+
+      return h.view("dashboard", { pubs, isAdmin, category });
     },
   },
 
@@ -128,18 +132,6 @@ export const dashboardController = {
         await db.pubStore.deletePubById(request.params.id);
       }
       return h.redirect("/dashboard");
-    },
-  },
-
-  category: {
-    handler: async function (request, h) {
-      const userId = request.auth.credentials._id;
-      const isAdmin = !!request.auth.credentials.isAdmin;
-      const pubs = await db.pubStore.getPubByCategory(request.params.category);
-      pubs.forEach((pub) => {
-        pub.isAuthor = String(pub.userId) === String(userId);
-      });
-      return h.view("dashboard", { pubs, category: request.params.category, isAdmin });
     },
   },
 };

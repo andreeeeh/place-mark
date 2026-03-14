@@ -18,20 +18,29 @@ suite("User Model tests", () => {
     assertSubset(testUser, newUser);
   });
 
-  test("delete all userApi", async () => {
-    let returnedUsers = await db.userStore.getAllUsers();
-    assert.equal(returnedUsers.length, 3);
-    await db.userStore.deleteAll();
-    returnedUsers = await db.userStore.getAllUsers();
-    assert.equal(returnedUsers.length, 0);
-  });
-
   test("get a user - success", async () => {
     const user = await db.userStore.addUser(testUser);
     const returnedUser1 = await db.userStore.getUserById(user._id);
     assert.deepEqual(user, returnedUser1);
     const returnedUser2 = await db.userStore.getUserByEmail(user.email);
     assert.deepEqual(user, returnedUser2);
+  });
+
+  
+  test("get a user - bad params", async () => {
+    assert.isNull(await db.userStore.getUserByEmail(""));
+    assert.isNull(await db.userStore.getUserById(""));
+    assert.isNull(await db.userStore.getUserById());
+  });
+  
+  test("update user - success", async () => {
+    const user = await db.userStore.addUser(testUser);
+    assert.isFalse(user.isAdmin);
+    
+    await db.userStore.toggleAdmin({ _id: user._id });
+    const updatedUser = await db.userStore.getUserById(user._id);
+    
+    assert.isTrue(updatedUser.isAdmin);
   });
 
   test("delete One User - success", async () => {
@@ -42,25 +51,17 @@ suite("User Model tests", () => {
     assert.isNull(deletedUser);
   });
 
-  test("get a user - bad params", async () => {
-    assert.isNull(await db.userStore.getUserByEmail(""));
-    assert.isNull(await db.userStore.getUserById(""));
-    assert.isNull(await db.userStore.getUserById());
-  });
-
   test("delete One User - fail", async () => {
     await db.userStore.deleteUserById("bad-id");
     const allUsers = await db.userStore.getAllUsers();
     assert.equal(testUsers.length, allUsers.length);
   });
 
-  test("update user - success", async () => {
-    const user = await db.userStore.addUser(testUser);
-    assert.isFalse(user.isAdmin);
-
-    await db.userStore.updateUser({ _id: user._id });
-    const updatedUser = await db.userStore.getUserById(user._id);
-
-    assert.isTrue(updatedUser.isAdmin);
+  test("delete all userApi", async () => {
+    let returnedUsers = await db.userStore.getAllUsers();
+    assert.equal(returnedUsers.length, 3);
+    await db.userStore.deleteAll();
+    returnedUsers = await db.userStore.getAllUsers();
+    assert.equal(returnedUsers.length, 0);
   });
 });

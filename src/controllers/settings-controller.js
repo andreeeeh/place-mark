@@ -30,7 +30,7 @@ export const settingsController = {
       if (!request.auth.credentials?.isAdmin) {
         return h.redirect("/dashboard");
       }
-      await db.userStore.updateUser({ _id: request.params.id });
+      await db.userStore.toggleAdmin({ _id: request.params.id });
 
       return h.redirect("/settings");
     },

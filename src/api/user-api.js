@@ -5,6 +5,49 @@ import { validationError } from "./logger.js";
 import { createToken } from "./jwt-utils.js";
 
 export const userApi = {
+  create: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const user = await db.userStore.addUser(request.payload);
+        if (user) {
+          return h.response(user).code(201);
+        }
+        return Boom.badImplementation("error creating user");
+      } catch (err) {
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+    tags: ["api"],
+    description: "Create a User",
+    notes: "Returns the newly created user",
+    validate: { payload: UserSpec, failAction: validationError },
+    response: { schema: UserSpecPlus, failAction: validationError },
+  },
+
+  authenticate: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const user = await db.userStore.getUserByEmail(request.payload.email);
+        if (!user) {
+          return Boom.unauthorized("User not found");
+        }
+        if (user.password !== request.payload.password) {
+          return Boom.unauthorized("Invalid password");
+        }
+        const token = createToken(user);
+        return h.response({ success: true, token: token }).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+    tags: ["api"],
+    description: "Authenticate a User",
+    validate: { payload: UserCredentialsSpec, failAction: validationError },
+    response: { schema: JwtAuth, failAction: validationError },
+  },
+
   find: {
     auth: {
       strategy: "jwt",
@@ -45,24 +88,29 @@ export const userApi = {
     response: { schema: UserSpecPlus, failAction: validationError },
   },
 
-  create: {
-    auth: false,
+  deleteOne: {
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function (request, h) {
       try {
-        const user = await db.userStore.addUser(request.payload);
-        if (user) {
-          return h.response(user).code(201);
+        if (!request.auth.credentials?.isAdmin) {
+          return Boom.forbidden("Admin access required");
         }
-        return Boom.badImplementation("error creating user");
+        const user = await db.userStore.getUserById(request.params.id);
+        if (!user) {
+          return Boom.notFound("No User with this id");
+        }
+        await db.userStore.deleteUserById(user._id);
+        return h.response().code(204);
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
     },
     tags: ["api"],
-    description: "Create a User",
-    notes: "Returns the newly created user",
-    validate: { payload: UserSpec, failAction: validationError },
-    response: { schema: UserSpecPlus, failAction: validationError },
+    description: "Delete a user",
+    notes: "Deletes a user by id (admin only)",
+    validate: { params: { id: IdSpec }, failAction: validationError },
   },
 
   deleteAll: {
@@ -82,26 +130,29 @@ export const userApi = {
     notes: "All users removed from PlaceMark",
   },
 
-  authenticate: {
-    auth: false,
-    handler: async function (request, h) {
+  toggleAdmin: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async function (request) {
       try {
-        const user = await db.userStore.getUserByEmail(request.payload.email);
+        if (!request.auth.credentials?.isAdmin) {
+          return Boom.forbidden("Admin access required");
+        }
+        const user = await db.userStore.getUserById(request.params.id);
         if (!user) {
-          return Boom.unauthorized("User not found");
+          return Boom.notFound("No User with this id");
         }
-        if (user.password !== request.payload.password) {
-          return Boom.unauthorized("Invalid password");
-        }
-        const token = createToken(user);
-        return h.response({ success: true, token: token }).code(201);
+        const updatedUser = await db.userStore.toggleAdmin({ _id: user._id });
+        return updatedUser;
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
     },
     tags: ["api"],
-    description: "Authenticate a User",
-    validate: { payload: UserCredentialsSpec, failAction: validationError },
-    response: { schema: JwtAuth, failAction: validationError },
+    description: "Toggle admin role",
+    notes: "Toggles isAdmin for a specific user (admin only)",
+    validate: { params: { id: IdSpec }, failAction: validationError },
+    response: { schema: UserSpecPlus, failAction: validationError },
   },
 };
