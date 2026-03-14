@@ -1,7 +1,7 @@
 import { aboutController } from "./controllers/about-controller.js";
 import { accountsController } from "./controllers/accounts-controller.js";
 import { dashboardController } from "./controllers/dashboard-controller.js";
-// import { commentController } from "./controllers/comment-controller.js";
+import { settingsController } from "./controllers/settings-controller.js";
 
 export const webRoutes = [
   { method: "GET", path: "/", config: accountsController.index },
@@ -12,6 +12,10 @@ export const webRoutes = [
   { method: "GET", path: "/logout", config: accountsController.logout },
 
   { method: "GET", path: "/about", config: aboutController.index },
+
+  { method: "GET", path: "/settings", config: settingsController.index },
+  { method: "GET", path: "/settings/user/{id}/delete", config: settingsController.deleteUser },
+  { method: "GET", path: "/settings/user/{id}/admin", config: settingsController.toggleAdmin },
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
   { method: "GET", path: "/dashboard/pub/{category}", config: dashboardController.category },

@@ -16,6 +16,7 @@ export const userMongoStore = {
 
   async addUser(user) {
     const newUser = new User(user);
+    newUser.isAdmin = false;
     const userObj = await newUser.save();
     const u = await this.getUserById(userObj._id);
     return u;
@@ -36,5 +37,11 @@ export const userMongoStore = {
 
   async deleteAll() {
     await User.deleteMany({});
+  },
+
+  async updateUser(updatedUser) {
+    const user = await User.findOne({ _id: updatedUser._id });
+    user.isAdmin = !user.isAdmin;
+    await user.save();
   },
 };

@@ -53,4 +53,14 @@ suite("User Model tests", () => {
     const allUsers = await db.userStore.getAllUsers();
     assert.equal(testUsers.length, allUsers.length);
   });
+
+  test("update user - success", async () => {
+    const user = await db.userStore.addUser(testUser);
+    assert.isFalse(user.isAdmin);
+
+    await db.userStore.updateUser({ _id: user._id });
+    const updatedUser = await db.userStore.getUserById(user._id);
+
+    assert.isTrue(updatedUser.isAdmin);
+  });
 });

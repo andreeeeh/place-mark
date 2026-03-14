@@ -53,7 +53,7 @@ export const accountsController = {
           .takeover()
           .code(400);
       }
-      request.cookieAuth.set({ id: user._id || user.id });
+      request.cookieAuth.set({ id: user._id, isAdmin: user.isAdmin });
       return h.redirect("/dashboard");
     },
   },
