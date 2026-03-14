@@ -1,0 +1,63 @@
+<form action="/pub" method="POST">
+  <div class="field">
+    <label class="label" for="name">Name</label>
+    <input class="input" type="text" id="name" name="name" value="{{form.name}}" required />
+  </div>
+  <div class="field">
+    <label class="label" for="description">Description</label>
+    <textarea class="textarea" id="description" name="description" required>{{form.description}}</textarea>
+  </div>
+  <div class="columns">
+    <div class="column field">
+      <label class="label" for="latitude">Latitude</label>
+      <input class="input" type="number" id="latitude" name="latitude" value="{{form.latitude}}" required />
+    </div>
+    <div class="column field">
+      <label class="label" for="longitude">Longitude</label>
+      <input class="input" type="number" id="longitude" name="longitude" value="{{form.longitude}}" required />
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Categories</label>
+    <label class="mr-4">
+      <input type="checkbox" name="daytime" />
+      Daytime
+    </label>
+    <label class="mr-4">
+      <input type="checkbox" name="nighttime" />
+      Nighttime
+    </label>
+    <label class="mr-4">
+      <input type="checkbox" name="liveMusic" />
+      Live Music
+    </label>
+    <label>
+      <input type="checkbox" name="dj" />
+      DJ
+    </label>
+  </div>
+  <button type="submit" class="button is-success is-fullwidth">Save Pub</button>
+</form>
+
+{{! prettier-ignore }}
+<script>
+    // Set checkbox states based on form data
+    const daytimeCheckbox = document.querySelector('input[name="daytime"]');
+    const nighttimeCheckbox = document.querySelector('input[name="nighttime"]');
+    const liveMusicCheckbox = document.querySelector('input[name="liveMusic"]');
+    const djCheckbox = document.querySelector('input[name="dj"]');
+
+    if (daytimeCheckbox) {
+      daytimeCheckbox.checked = "{{form.categories.daytime}}" === "true";
+    }
+    if (nighttimeCheckbox) {
+      nighttimeCheckbox.checked = "{{form.categories.nighttime}}" === "true";
+    }
+    if (liveMusicCheckbox) {
+      liveMusicCheckbox.checked = "{{form.categories.liveMusic}}" === "true";
+    }
+    if (djCheckbox) {
+      djCheckbox.checked = "{{form.categories.dj}}" === "true";
+    }
+
+</script>

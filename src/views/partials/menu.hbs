@@ -1,4 +1,4 @@
-<nav class="navbar has-background-grey-darker" role="navigation" aria-label="main navigation">
+<nav class="navbar p-4 has-background-grey-darker" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     {{> place-mark-brand}}
   </div>
@@ -6,8 +6,7 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a id="home" class="button is-success is-light" href="/">Home</a>
-          <a id="dashboard" class="button is-success is-light" href="/places">All Pubs</a>
+          <a id="dashboard" class="button is-success is-light" href="/dashboard">Home</a>
           <a id="about" class="button is-success is-light" href="/about">About</a>
           <a id="logout" class="button is-light" href="/logout">Logout</a>
         </div>
@@ -17,6 +16,5 @@
 </nav>
 
 <script>
-  const activeButton = document.getElementById("{{active}}");
-  if (activeButton) activeButton.classList.add("is-primary");
+  document.getElementById("{{active}}").classList.remove("is-light");
 </script>

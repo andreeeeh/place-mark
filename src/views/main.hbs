@@ -1,4 +1,9 @@
-{{> welcome-menu}}
+{{#if isAuthenticated}}
+  {{> menu active="about"}}
+{{else}}
+  {{> welcome-menu active="home"}}
+{{/if}}
+
 <main class="section">
 {{> welcome-main}}
 </main>
