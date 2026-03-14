@@ -1,5 +1,6 @@
 import { PubSpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
+import { imageStore } from "../models/image-store.js";
 
 function mapPubPayload(payload) {
   return {
@@ -116,6 +117,34 @@ export const dashboardController = {
         ...updatedPub,
       });
       return h.redirect("/dashboard");
+    },
+  },
+
+  uploadImage: {
+    handler: async function (request, h) {
+      try {
+        const pub = await db.pubStore.getPubById(request.params.id);
+        const userId = request.auth.credentials._id;
+        if (!pub || String(pub.userId) !== String(userId)) {
+          return h.redirect("/dashboard");
+        }
+        const file = request.payload.imagefile;
+        if (Object.keys(file).length > 0) {
+          const url = await imageStore.uploadImage(request.payload.imagefile);
+          pub.img = url;
+          await db.pubStore.updatePub(pub);
+        }
+        return h.redirect("/dashboard");
+      } catch (err) {
+        console.log(err);
+        return h.redirect("/dashboard");
+      }
+    },
+    payload: {
+      multipart: true,
+      output: "data",
+      maxBytes: 209715200,
+      parse: true,
     },
   },
 
