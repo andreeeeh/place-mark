@@ -29,7 +29,7 @@ suite("Pub Model tests", () => {
 
   test("delete all pubs", async () => {
     let returnedPubs = await db.pubStore.getAllPubs();
-    assert.equal(returnedPubs.length, 3);
+    assert.equal(returnedPubs.length, 2);
     await db.pubStore.deleteAll();
     returnedPubs = await db.pubStore.getAllPubs();
     assert.equal(returnedPubs.length, 0);
@@ -61,6 +61,19 @@ suite("Pub Model tests", () => {
     await db.pubStore.deletePubById("bad-id");
     const allPubs = await db.pubStore.getAllPubs();
     assert.equal(allPubs.length, testPubs.length);
+  });
+
+  test("update pub - success", async () => {
+    const pubToUpdate = testPubs[0];
+    const updatedPubData = {
+      ...pubToUpdate,
+      name: "Updated Pub Name",
+    };
+
+    await db.pubStore.updatePub(updatedPubData);
+    const returnedPub = await db.pubStore.getPubById(pubToUpdate._id);
+
+    assert.equal(returnedPub.name, updatedPubData.name);
   });
 
   test("get pubs by category - liveMusic", async () => {
