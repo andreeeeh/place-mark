@@ -3,13 +3,14 @@
 <section class="section">
   <div class="card has-background-grey-lighter">
     <div class="card-content">
-      <h2 class="title">Users</h2>
+      <h2 class="title">Users: <span>{{totalUsers}}</span></h2>
       <table class="table is-fullwidth is-striped is-hoverable">
         <thead>
           <tr>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Pubs</th>
             <th>Admin</th>
             <th></th>
           </tr>
@@ -20,6 +21,7 @@
               <td>{{firstName}}</td>
               <td>{{lastName}}</td>
               <td>{{email}}</td>
+              <td>{{pubCount}}</td>
               <td>
                 <a 
                   href="/settings/user/{{_id}}/admin" 
