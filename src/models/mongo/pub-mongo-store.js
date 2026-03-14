@@ -18,22 +18,14 @@ export const pubMongoStore = {
     return userPubs;
   },
 
-  async getAllPubs() {
-    const pubs = await Pub.find().lean();
-    return pubs;
-  },
-
   async getPubByCategory(category) {
     const pubs = await Pub.find({ [`categories.${category}`]: true }).lean();
     return pubs;
   },
 
-  async deletePubById(id) {
-    try {
-      await Pub.deleteOne({ _id: id });
-    } catch (err) {
-      console.log("bad id");
-    }
+  async getAllPubs() {
+    const pubs = await Pub.find().lean();
+    return pubs;
   },
 
   async updatePub(updatedPub) {
@@ -44,6 +36,14 @@ export const pubMongoStore = {
     pub.longitude = updatedPub.longitude;
     pub.categories = updatedPub.categories;
     await pub.save();
+  },
+
+  async deletePubById(id) {
+    try {
+      await Pub.deleteOne({ _id: id });
+    } catch (err) {
+      console.log("bad id");
+    }
   },
 
   async deleteAll() {

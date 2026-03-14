@@ -4,26 +4,21 @@ import { testUser, testUsers } from "../fixtures.js";
 import { assertSubset } from "../test-utils.js";
 
 suite("User Model tests", () => {
+  const users = [];
+
   setup(async () => {
     db.init("mongo");
     await db.userStore.deleteAll();
+    users.length = 0;
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      testUsers[i] = await db.userStore.addUser(testUsers[i]);
+      users.push(await db.userStore.addUser(testUsers[i]));
     }
   });
 
   test("create a user", async () => {
     const newUser = await db.userStore.addUser(testUser);
     assertSubset(testUser, newUser);
-  });
-
-  test("delete all userApi", async () => {
-    let returnedUsers = await db.userStore.getAllUsers();
-    assert.equal(returnedUsers.length, 3);
-    await db.userStore.deleteAll();
-    returnedUsers = await db.userStore.getAllUsers();
-    assert.equal(returnedUsers.length, 0);
   });
 
   test("get a user - success", async () => {
@@ -34,18 +29,28 @@ suite("User Model tests", () => {
     assert.deepEqual(user, returnedUser2);
   });
 
-  test("delete One User - success", async () => {
-    await db.userStore.deleteUserById(testUsers[0]._id);
-    const returnedUsers = await db.userStore.getAllUsers();
-    assert.equal(returnedUsers.length, testUsers.length - 1);
-    const deletedUser = await db.userStore.getUserById(testUsers[0]._id);
-    assert.isNull(deletedUser);
-  });
-
   test("get a user - bad params", async () => {
     assert.isNull(await db.userStore.getUserByEmail(""));
     assert.isNull(await db.userStore.getUserById(""));
     assert.isNull(await db.userStore.getUserById());
+  });
+
+  test("update user - success", async () => {
+    const user = await db.userStore.addUser(testUser);
+    assert.isFalse(user.isAdmin);
+
+    await db.userStore.toggleAdmin({ _id: user._id });
+    const updatedUser = await db.userStore.getUserById(user._id);
+
+    assert.isTrue(updatedUser.isAdmin);
+  });
+
+  test("delete One User - success", async () => {
+    await db.userStore.deleteUserById(users[0]._id);
+    const returnedUsers = await db.userStore.getAllUsers();
+    assert.equal(returnedUsers.length, testUsers.length - 1);
+    const deletedUser = await db.userStore.getUserById(users[0]._id);
+    assert.isNull(deletedUser);
   });
 
   test("delete One User - fail", async () => {
@@ -54,13 +59,11 @@ suite("User Model tests", () => {
     assert.equal(testUsers.length, allUsers.length);
   });
 
-  test("update user - success", async () => {
-    const user = await db.userStore.addUser(testUser);
-    assert.isFalse(user.isAdmin);
-
-    await db.userStore.updateUser({ _id: user._id });
-    const updatedUser = await db.userStore.getUserById(user._id);
-
-    assert.isTrue(updatedUser.isAdmin);
+  test("delete all userApi", async () => {
+    let returnedUsers = await db.userStore.getAllUsers();
+    assert.equal(returnedUsers.length, 3);
+    await db.userStore.deleteAll();
+    returnedUsers = await db.userStore.getAllUsers();
+    assert.equal(returnedUsers.length, 0);
   });
 });
