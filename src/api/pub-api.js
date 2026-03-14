@@ -42,8 +42,8 @@ export const pubApi = {
     notes: "Returns the newly created pub",
     validate: { payload: PubSpec, failAction: validationError },
     response: { schema: PubSpecPlus, failAction: validationError },
-    },
-    
+  },
+
   find: {
     auth: {
       strategy: "jwt",
@@ -80,7 +80,7 @@ export const pubApi = {
         }
         return pub;
       } catch (err) {
-        return Boom.serverUnavailable("No Pub with this id");
+        return Boom.notFound("No Pub with this id");
       }
     },
     tags: ["api"],
@@ -140,7 +140,7 @@ export const pubApi = {
         await db.pubStore.deletePubById(pub._id);
         return h.response().code(204);
       } catch (err) {
-        return Boom.serverUnavailable("No Pub with this id");
+        return Boom.notFound("No Pub with this id");
       }
     },
     tags: ["api"],

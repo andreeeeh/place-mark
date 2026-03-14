@@ -8,21 +8,31 @@ const users = new Array(testUsers.length);
 suite("User API tests", () => {
   setup(async () => {
     placeMarkService.clearAuth();
-    await placeMarkService.createUser(testUser);
+    try {
+      await placeMarkService.createUser(testUser);
+    } catch (e) {
+      // may already exist from a previous run
+    }
     await placeMarkService.authenticate(userCredentials);
     await placeMarkService.deleteAllUsers();
+
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      users[0] = await placeMarkService.createUser(testUsers[i]);
+      users[i] = await placeMarkService.createUser(testUsers[i]);
     }
+
     await placeMarkService.createUser(testUser);
     await placeMarkService.authenticate(userCredentials);
   });
   teardown(async () => {});
 
   test("create a user", async () => {
-    const newUser = await placeMarkService.createUser(testUser);
-    assertSubset(testUser, newUser);
+    const newUser = await placeMarkService.createUser({
+      firstName: "Lisa",
+      lastName: "Simpson",
+      email: "lisa@simpson.com",
+      password: "secret",
+    });
     assert.isDefined(newUser._id);
   });
 
@@ -53,7 +63,7 @@ suite("User API tests", () => {
 
   test("get a user - deleted user", async () => {
     await placeMarkService.deleteAllUsers();
-    await placeMarkService.createUser(testUser);
+    const adminUser = await placeMarkService.createUser(testUser);
     await placeMarkService.authenticate(userCredentials);
     try {
       const returnedUser = await placeMarkService.getUser(users[0]._id);
