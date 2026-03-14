@@ -1,0 +1,18 @@
+{{#each pubs}}
+  <article class="message is-success is-light">
+    <div class="message-header">
+      <p>{{name}}</p>
+    </div>
+    <div class="message-body">
+      <p class="mb-2">{{description}}</p>
+      <p><strong>Location:</strong> {{latitude}}, {{longitude}}</p>
+      <p>
+        <strong>Categories:</strong>
+        {{#if categories.daytime}} Daytime {{/if}}
+        {{#if categories.nighttime}} Nighttime {{/if}}
+        {{#if categories.liveMusic}} Live Music {{/if}}
+        {{#if categories.dj}} DJ {{/if}}
+      </p>
+    </div>
+  </article>
+{{/each}}

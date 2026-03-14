@@ -6,7 +6,9 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a class="button" id="login" href="/login"> Log in </a> <a class="button" id="signup" href="/signup"> Sign
+          <a id="home" class="button is-success is-light" href="/">Home</a>
+          <a class="button is-success is-light" id="login" href="/login"> Log in </a> 
+          <a class="button is-success is-light" id="signup" href="/signup"> Sign
           up </a>
         </div>
       </div>
@@ -15,5 +17,5 @@
 </nav>
 
 <script>
-  document.getElementById("{{active}}").classList.add("is-success");
+  document.getElementById("{{active}}").classList.remove("is-light");
 </script>
