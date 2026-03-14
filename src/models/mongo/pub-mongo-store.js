@@ -24,7 +24,11 @@ export const pubMongoStore = {
   },
 
   async deletePubById(id) {
-    await Pub.deleteOne({ _id: id });
+    try {
+      await Pub.deleteOne({ _id: id });
+    } catch (err) {
+      console.log("bad id");
+    }
   },
 
   async deleteAll() {
