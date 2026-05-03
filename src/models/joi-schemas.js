@@ -63,5 +63,11 @@ export const JwtAuth = Joi.object()
   .keys({
     success: Joi.boolean().example("true").required(),
     token: Joi.string().example("eyJhbGciOiJND.g5YmJisIjoiaGYwNTNjAOhE.gCWGmY5-YigQw0DCBo").required(),
+    _id: IdSpec,
+    name: Joi.string().example("Homer Simpson"),
+    firstName: Joi.string().example("Homer"),
+    lastName: Joi.string().example("Simpson"),
+    email: Joi.string().email().example("homer@simpson.com"),
+    isAdmin: Joi.boolean().default(false),
   })
   .label("JwtAuth");
