@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
 import { PubSpec, PubSpecPlus, IdSpec, PubArray, PubCategorySpec } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
+import { imageStore } from "../models/image-store.js";
 
 function mapPubPayload(payload, userId) {
   return {
@@ -146,6 +147,46 @@ export const pubApi = {
     tags: ["api"],
     description: "Delete a pub",
     validate: { params: { id: IdSpec }, failAction: validationError },
+  },
+
+  uploadImage: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async function (request, h) {
+      try {
+        const pub = await db.pubStore.getPubById(request.params.id);
+        if (!pub) {
+          return Boom.notFound("No Pub with this id");
+        }
+        const requesterId = request.auth.credentials._id;
+        if (String(pub.userId) !== String(requesterId)) {
+          return Boom.forbidden("You are not allowed to update this pub");
+        }
+        const file = request.payload.imagefile;
+        console.log("uploadImage payload type:", typeof file, Buffer.isBuffer(file) ? `Buffer(${file.length})` : file);
+        if (file && file.length > 0) {
+          const url = await imageStore.uploadImage(file);
+          pub.img = url;
+          await db.pubStore.updatePub(pub);
+        }
+        return db.pubStore.getPubById(pub._id);
+      } catch (err) {
+        console.error("uploadImage error:", err);
+        return Boom.serverUnavailable("Image upload failed");
+      }
+    },
+    tags: ["api"],
+    description: "Upload an image for a pub",
+    notes: "Uploads image to Cloudinary and saves URL on the pub",
+    validate: { params: { id: IdSpec }, failAction: validationError },
+    response: { schema: PubSpecPlus, failAction: validationError },
+    payload: {
+      multipart: true,
+      output: "data",
+      maxBytes: 209715200,
+      parse: true,
+    },
   },
 
   deleteAll: {

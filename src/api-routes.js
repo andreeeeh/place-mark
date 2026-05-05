@@ -16,4 +16,5 @@ export const apiRoutes = [
   { method: "DELETE", path: "/api/pubs", config: pubApi.deleteAll },
   { method: "DELETE", path: "/api/pubs/{id}", config: pubApi.deleteOne },
   { method: "POST", path: "/api/pubs/{id}", config: pubApi.update },
+  { method: "POST", path: "/api/pubs/{id}/uploadimage", config: pubApi.uploadImage },
 ];
