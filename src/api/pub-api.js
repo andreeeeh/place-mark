@@ -189,6 +189,34 @@ export const pubApi = {
     },
   },
 
+  deleteImage: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async function (request) {
+      try {
+        const pub = await db.pubStore.getPubById(request.params.id);
+        if (!pub) {
+          return Boom.notFound("No Pub with this id");
+        }
+        const requesterId = request.auth.credentials._id;
+        if (String(pub.userId) !== String(requesterId)) {
+          return Boom.forbidden("You are not allowed to update this pub");
+        }
+        pub.img = "";
+        await db.pubStore.updatePub(pub);
+        return db.pubStore.getPubById(pub._id);
+      } catch (err) {
+        return Boom.serverUnavailable("Image delete failed");
+      }
+    },
+    tags: ["api"],
+    description: "Delete image for a pub",
+    notes: "Clears image URL from pub",
+    validate: { params: { id: IdSpec }, failAction: validationError },
+    response: { schema: PubSpecPlus, failAction: validationError },
+  },
+
   deleteAll: {
     auth: {
       strategy: "jwt",
