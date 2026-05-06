@@ -37,8 +37,8 @@ export const seedData = {
     templeBar: {
       name: "The Temple Bar",
       description: "A genuinely warm welcome backed up by first rate modern service and traditional Irish music, is the hallmark of this friendly spot in Dublin City centre.",
-      latitude: 53.892853508136454,
-      longitude: -3.6274771291586947,
+      latitude: 53.3455315045904,
+      longitude: -6.264032093058446,
       categories: { daytime: true, nighttime: true, liveMusic: true, dj: true },
       userId: "->users.homer",
     },
