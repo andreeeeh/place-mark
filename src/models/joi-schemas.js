@@ -54,7 +54,7 @@ export const PubSpecPlus = Joi.object()
       liveMusic: Joi.boolean().default(false),
       dj: Joi.boolean().default(false),
     }).required(),
-    img: Joi.string().allow("").default(""),
+    imgs: Joi.array().items(Joi.string()).default([]),
     isAuthor: Joi.boolean().default(false),
     __v: Joi.number(),
   })

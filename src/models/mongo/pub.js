@@ -16,7 +16,7 @@ const pubSchema = new mongoose.Schema({
     liveMusic: { type: Boolean, default: false },
     dj: { type: Boolean, default: false },
   },
-  img: { type: String, default: "" },
+  imgs: { type: [String], default: [] },
   isAuthor: { type: Boolean, default: false },
 });
 

@@ -1,4 +1,5 @@
 import Boom from "@hapi/boom";
+import Joi from "joi";
 import { db } from "../models/db.js";
 import { PubSpec, PubSpecPlus, IdSpec, PubArray, PubCategorySpec } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
@@ -167,7 +168,7 @@ export const pubApi = {
         console.log("uploadImage payload type:", typeof file, Buffer.isBuffer(file) ? `Buffer(${file.length})` : file);
         if (file && file.length > 0) {
           const url = await imageStore.uploadImage(file);
-          pub.img = url;
+          pub.imgs = [...(pub.imgs || []), url];
           await db.pubStore.updatePub(pub);
         }
         return db.pubStore.getPubById(pub._id);
@@ -203,7 +204,11 @@ export const pubApi = {
         if (String(pub.userId) !== String(requesterId)) {
           return Boom.forbidden("You are not allowed to update this pub");
         }
-        pub.img = "";
+        const imageUrl = request.payload?.imageUrl;
+        if (!imageUrl) {
+          return Boom.badRequest("imageUrl is required");
+        }
+        pub.imgs = (pub.imgs || []).filter((u) => u !== imageUrl);
         await db.pubStore.updatePub(pub);
         return db.pubStore.getPubById(pub._id);
       } catch (err) {
@@ -212,8 +217,12 @@ export const pubApi = {
     },
     tags: ["api"],
     description: "Delete image for a pub",
-    notes: "Clears image URL from pub",
-    validate: { params: { id: IdSpec }, failAction: validationError },
+    notes: "Removes a specific image URL from pub.imgs",
+    validate: {
+      params: { id: IdSpec },
+      payload: Joi.object({ imageUrl: Joi.string().uri().required() }),
+      failAction: validationError,
+    },
     response: { schema: PubSpecPlus, failAction: validationError },
   },
 

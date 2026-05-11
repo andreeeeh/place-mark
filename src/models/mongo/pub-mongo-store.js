@@ -35,8 +35,8 @@ export const pubMongoStore = {
     pub.latitude = updatedPub.latitude;
     pub.longitude = updatedPub.longitude;
     pub.categories = updatedPub.categories;
-    if (updatedPub.img !== undefined) {
-      pub.img = updatedPub.img;
+    if (updatedPub.imgs !== undefined) {
+      pub.imgs = updatedPub.imgs;
     }
     await pub.save();
   },
