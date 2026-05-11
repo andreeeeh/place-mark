@@ -1,5 +1,6 @@
 import { UserSpec, UserCredentialsSpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
+import { verifyPassword } from "../models/password-utils.js";
 
 export const accountsController = {
   index: {
@@ -47,7 +48,8 @@ export const accountsController = {
     handler: async function (request, h) {
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
-      if (!user || user.password !== password) {
+      const passwordMatches = user ? await verifyPassword(password, user.password) : false;
+      if (!user || !passwordMatches) {
         return h
           .view("login-view", { title: "Log in error", errors: [{ message: "Invalid email or password" }] })
           .takeover()

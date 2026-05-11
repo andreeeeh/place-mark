@@ -1,5 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase.js";
+import { hashPassword } from "../password-utils.js";
 
 function toUserModel(user) {
   if (!user?.exists()) return null;
@@ -9,21 +10,28 @@ function toUserModel(user) {
   };
 }
 
+function toPublicUser(user) {
+  if (!user) return null;
+  const { password, ...publicUser } = user;
+  return publicUser;
+}
+
 export const userFirebaseStore = {
   async addUser(user) {
-    const docRef = await addDoc(collection(db, "users"), { ...user, isAdmin: false });
+    const hashedPassword = await hashPassword(user.password);
+    const docRef = await addDoc(collection(db, "users"), { ...user, password: hashedPassword, isAdmin: false });
     return this.getUserById(docRef.id);
   },
 
   async getAllUsers() {
     const users = await getDocs(collection(db, "users"));
-    return users.docs.map((user) => toUserModel(user));
+    return users.docs.map((user) => toPublicUser(toUserModel(user)));
   },
 
   async getUserById(id) {
     if (id) {
       const user = await getDoc(doc(db, "users", id));
-      return toUserModel(user);
+      return toPublicUser(toUserModel(user));
     }
     return null;
   },

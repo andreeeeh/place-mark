@@ -14,11 +14,16 @@ export const UserSpec = UserCredentialsSpec.keys({
   lastName: Joi.string().example("Simpson").required(),
 }).label("UserDetails");
 
-export const UserSpecPlus = UserSpec.keys({
-  _id: IdSpec,
-  __v: Joi.number(),
-  isAdmin: Joi.boolean().default(false),
-}).label("UserDetailsPlus");
+export const UserSpecPlus = Joi.object()
+  .keys({
+    firstName: Joi.string().example("Homer").required(),
+    lastName: Joi.string().example("Simpson").required(),
+    email: Joi.string().email().example("user@example.com").required(),
+    _id: IdSpec,
+    __v: Joi.number(),
+    isAdmin: Joi.boolean().default(false),
+  })
+  .label("UserDetailsPlus");
 
 export const UserArray = Joi.array().items(UserSpecPlus).label("UserArray");
 

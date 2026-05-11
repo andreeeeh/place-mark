@@ -3,6 +3,7 @@ import { db } from "../models/db.js";
 import { UserCredentialsSpec, UserSpec, UserSpecPlus, IdSpec, UserArray, JwtAuth } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
 import { createToken } from "./jwt-utils.js";
+import { verifyPassword } from "../models/password-utils.js";
 
 export const userApi = {
   create: {
@@ -33,7 +34,8 @@ export const userApi = {
         if (!user) {
           return Boom.unauthorized("User not found");
         }
-        if (user.password !== request.payload.password) {
+        const passwordMatches = await verifyPassword(request.payload.password, user.password);
+        if (!passwordMatches) {
           return Boom.unauthorized("Invalid password");
         }
         const token = createToken(user);

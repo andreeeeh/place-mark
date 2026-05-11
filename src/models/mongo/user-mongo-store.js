@@ -1,8 +1,18 @@
 import { User } from "./user.js";
+import { hashPassword } from "../password-utils.js";
+
+function toPublicUser(user) {
+  if (!user) {
+    return null;
+  }
+  const { password, ...publicUser } = user;
+  return publicUser;
+}
 
 export const userMongoStore = {
   async addUser(user) {
-    const newUser = new User(user);
+    const hashedPassword = await hashPassword(user.password);
+    const newUser = new User({ ...user, password: hashedPassword });
     newUser.isAdmin = false;
     const userObj = await newUser.save();
     const u = await this.getUserById(userObj._id);
@@ -11,19 +21,19 @@ export const userMongoStore = {
 
   async getAllUsers() {
     const users = await User.find().lean();
-    return users;
+    return users.map((user) => toPublicUser(user));
   },
 
   async getUserById(id) {
     if (id) {
       const user = await User.findOne({ _id: id }).lean();
-      return user;
+      return toPublicUser(user);
     }
     return null;
   },
 
   async getUserByEmail(email) {
-    const user = await User.findOne({ email: email }).lean();
+    const user = await User.findOne({ email }).lean();
     return user;
   },
 
