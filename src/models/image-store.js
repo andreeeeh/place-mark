@@ -1,5 +1,4 @@
 import * as cloudinary from "cloudinary";
-import { writeFileSync } from "fs";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -18,9 +17,14 @@ export const imageStore = {
   },
 
   uploadImage: async function (imagefile) {
-    writeFileSync("./public/temp.img", imagefile);
-    const response = await cloudinary.v2.uploader.upload("./public/temp.img");
-    return response.url;
+    return new Promise((resolve, reject) => {
+      cloudinary.v2.uploader
+        .upload_stream({ resource_type: "auto" }, (error, result) => {
+          if (error) return reject(error);
+          resolve(result.url);
+        })
+        .end(imagefile);
+    });
   },
 
   deleteImage: async function (img) {
